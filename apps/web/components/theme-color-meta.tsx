@@ -17,7 +17,7 @@ export function ThemeColorMeta() {
       THEME_COLORS.light;
 
     let meta = document.querySelector<HTMLMetaElement>(
-      'meta[name="theme-color"]'
+      'meta[name="theme-color"]',
     );
     if (!meta) {
       meta = document.createElement("meta");

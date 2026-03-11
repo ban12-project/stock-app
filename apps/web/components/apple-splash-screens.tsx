@@ -35,7 +35,11 @@ const STARTUP_IMAGE_DEVICES = [
   { w: 440, h: 956, r: 3 },
 ] as const;
 
-export function AppleSplashScreens({ icon = "/icon-512x512.png" }: { icon?: string }) {
+export function AppleSplashScreens({
+  icon = "/icon-512x512.png",
+}: {
+  icon?: string;
+}) {
   return (
     <>
       {STARTUP_IMAGE_DEVICES.map(({ w, h, r }) => (

@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 import { ThemeProvider } from "next-themes";
+import { AppleSplashScreens } from "@/components/apple-splash-screens";
 import { LocaleProvider } from "@/components/i18n";
 import { ThemeColorMeta } from "@/components/theme-color-meta";
-import { AppleSplashScreens } from "@/components/apple-splash-screens";
 import { getDictionary } from "@/get-dictionary";
 import { i18n, type Locale } from "@/i18n-config";
 
