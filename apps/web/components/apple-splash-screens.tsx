@@ -2,7 +2,8 @@
 
 /**
  * Renders <link rel="apple-touch-startup-image"> tags for all common iOS devices.
- * Uses a single source image centered on a solid background.
+ * Points to the /api/splash route which dynamically generates full-screen images
+ * with the app icon centered on the background color.
  *
  * Next.js automatically hoists <link> tags to <head>.
  */
@@ -35,21 +36,21 @@ const STARTUP_IMAGE_DEVICES = [
   { w: 440, h: 956, r: 3 },
 ] as const;
 
-export function AppleSplashScreens({
-  icon = "/icon-512x512.png",
-}: {
-  icon?: string;
-}) {
+export function AppleSplashScreens() {
   return (
     <>
-      {STARTUP_IMAGE_DEVICES.map(({ w, h, r }) => (
-        <link
-          key={`${w}-${h}-${r}`}
-          rel="apple-touch-startup-image"
-          href={icon}
-          media={`(device-width: ${w}px) and (device-height: ${h}px) and (-webkit-device-pixel-ratio: ${r})`}
-        />
-      ))}
+      {STARTUP_IMAGE_DEVICES.map(({ w, h, r }) => {
+        const pw = w * r;
+        const ph = h * r;
+        return (
+          <link
+            key={`${w}-${h}-${r}`}
+            rel="apple-touch-startup-image"
+            href={`/api/splash?w=${pw}&h=${ph}`}
+            media={`(device-width: ${w}px) and (device-height: ${h}px) and (-webkit-device-pixel-ratio: ${r})`}
+          />
+        );
+      })}
     </>
   );
 }

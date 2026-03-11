@@ -20,10 +20,7 @@ import { getDictionary } from "@/get-dictionary";
 import { i18n, type Locale } from "@/i18n-config";
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1a1a1a" },
-  ],
+  viewportFit: "cover",
 };
 
 export async function generateMetadata(props: {
