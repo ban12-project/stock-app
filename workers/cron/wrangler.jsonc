@@ -1,0 +1,29 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "stock-app",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-03-10",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "stock-app",
+    },
+  ],
+  "triggers": {
+    "crons": [
+      "30-59/5 1 * * 1-5",
+      "*/5 2-3 * * 1-5",
+      "0,5,10,15,20,25,30 3 * * 1-5",
+      "*/5 5-6 * * 1-5",
+      "0 7 * * 1-5",
+    ],
+  },
+  "observability": {
+    "enabled": true,
+  },
+}

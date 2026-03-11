@@ -21,13 +21,14 @@
   },
   "files": {
     "includes": [
-      "src/app/**/*",
-      "src/components/**/*",
-      "src/hooks/**/*",
-      "src/lib/**/*",
-      "!src/components/ui/*",
-      "!src/components/ai-elements/*",
-      "!src/lib/db/migrations/*"
+      "apps/web/app/**/*",
+      "apps/web/components/**/*",
+      "apps/web/hooks/**/*",
+      "apps/web/lib/**/*",
+      "workers/cron/src/**/*",
+      "!apps/web/components/ui/*",
+      "!apps/web/components/ai-elements/*",
+      "!apps/web/lib/db/migrations/*"
     ]
   }
 }

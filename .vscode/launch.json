@@ -1,11 +1,21 @@
 {
   "version": "0.2.0",
+  "inputs": [
+    {
+      "id": "app",
+      "type": "pickString",
+      "description": "Select the app to debug",
+      "options": ["apps/web"],
+      "default": "apps/web"
+    }
+  ],
   "configurations": [
     {
       "name": "Next.js: debug server-side",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run dev"
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/${input:app}"
     },
     {
       "name": "Next.js: debug client-side",
@@ -17,7 +27,7 @@
       "name": "Next.js: debug full stack",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "program": "${workspaceFolder}/${input:app}/node_modules/next/dist/bin/next",
       "runtimeArgs": ["--inspect"],
       "skipFiles": ["<node_internals>/**"],
       "serverReadyAction": {
@@ -26,7 +36,8 @@
         "pattern": "- Local:.+(https?://.+)",
         "uriFormat": "%s",
         "webRoot": "${workspaceFolder}"
-      }
+      },
+      "cwd": "${workspaceFolder}/${input:app}"
     }
   ]
 }
