@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 
@@ -14,8 +14,17 @@ const geistMono = Geist_Mono({
 
 import { ThemeProvider } from "next-themes";
 import { LocaleProvider } from "@/components/i18n";
+import { ThemeColorMeta } from "@/components/theme-color-meta";
+import { AppleSplashScreens } from "@/components/apple-splash-screens";
 import { getDictionary } from "@/get-dictionary";
 import { i18n, type Locale } from "@/i18n-config";
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1a1a" },
+  ],
+};
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: string }>;
@@ -33,6 +42,11 @@ export async function generateMetadata(props: {
       "push notifications",
       "stock alerts",
     ],
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "black-translucent",
+      title: dictionary.nav.brand,
+    },
   };
 }
 
@@ -58,6 +72,8 @@ export default async function RootLayout(props: {
           enableSystem
           disableTransitionOnChange
         >
+          <ThemeColorMeta />
+          <AppleSplashScreens />
           <LocaleProvider locale={lang} i18n={i18n}>
             {props.children}
           </LocaleProvider>

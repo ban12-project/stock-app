@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Monitor A-share stocks and get push notifications on price changes",
     start_url: "/dashboard",
     display: "standalone",
-    background_color: "#0a0a0a",
-    theme_color: "#0a0a0a",
+    background_color: "#1a1a1a",
+    theme_color: "#1a1a1a",
     icons: [
       {
         src: "/icon-192x192.png",
