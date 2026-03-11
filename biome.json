@@ -1,0 +1,33 @@
+{
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "linter": {
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
+    }
+  },
+  "css": {
+    "parser": {
+      "cssModules": true,
+      "tailwindDirectives": true
+    }
+  },
+  "files": {
+    "includes": [
+      "src/app/**/*",
+      "src/components/**/*",
+      "src/hooks/**/*",
+      "src/lib/**/*",
+      "!src/components/ui/*",
+      "!src/components/ai-elements/*",
+      "!src/lib/db/migrations/*"
+    ]
+  }
+}
