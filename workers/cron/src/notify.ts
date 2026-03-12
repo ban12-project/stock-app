@@ -1,9 +1,17 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
+import type { NeonHttpDatabase } from "drizzle-orm/neon-http";
 import webpush from "web-push";
 import * as schema from "./db/schema";
 
+type DB = NeonHttpDatabase<typeof schema>;
+
+/**
+ * Send a push notification to all subscriptions for a given user.
+ * VAPID details must be configured before calling this function.
+ * Automatically cleans up expired/invalid subscriptions.
+ */
 export async function notifyUserById(
-  db: any,
+  db: DB,
   userId: string,
   payload: {
     title: string;
@@ -11,25 +19,17 @@ export async function notifyUserById(
     icon?: string;
     url?: string;
   },
-  vapidPrivateKey?: string,
-  vapidPublicKey?: string,
 ) {
-  if (vapidPrivateKey && vapidPublicKey) {
-    webpush.setVapidDetails(
-      "mailto:coda@ban12.com",
-      vapidPublicKey,
-      vapidPrivateKey,
-    );
-  }
-
   const subscriptions = await db.query.pushSubscription.findMany({
     where: eq(schema.pushSubscription.userId, userId),
   });
 
+  if (subscriptions.length === 0) return;
+
   const expiredEndpoints: string[] = [];
 
-  await Promise.all(
-    subscriptions.map(async (sub: any) => {
+  await Promise.allSettled(
+    subscriptions.map(async (sub) => {
       try {
         await webpush.sendNotification(
           {
@@ -49,11 +49,10 @@ export async function notifyUserById(
     }),
   );
 
+  // Batch delete all expired subscriptions in one query
   if (expiredEndpoints.length > 0) {
-    for (const endpoint of expiredEndpoints) {
-      await db
-        .delete(schema.pushSubscription)
-        .where(eq(schema.pushSubscription.endpoint, endpoint));
-    }
+    await db
+      .delete(schema.pushSubscription)
+      .where(inArray(schema.pushSubscription.endpoint, expiredEndpoints));
   }
 }
