@@ -1,16 +1,19 @@
 "use client";
 
-import { LogOut, User } from "lucide-react";
+import { Fingerprint, Loader2, LogOut, User } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useTransition } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Messages } from "@/get-dictionary";
-import { signOut, useSession } from "@/lib/auth-client";
+import { authClient, signOut, useSession } from "@/lib/auth-client";
 
 interface UserNavProps {
   dictionary: Messages;
@@ -20,6 +23,18 @@ export function UserNav({ dictionary }: UserNavProps) {
   const { data: session } = useSession();
   const params = useParams();
   const lang = params.lang as string;
+  const [isPending, startTransition] = useTransition();
+
+  function handleAddPasskey() {
+    startTransition(async () => {
+      try {
+        await authClient.passkey.addPasskey();
+        toast.success("Passkey registered successfully!");
+      } catch {
+        toast.error("Failed to register passkey. Please try again.");
+      }
+    });
+  }
 
   return (
     <DropdownMenu>
@@ -41,6 +56,19 @@ export function UserNav({ dictionary }: UserNavProps) {
             {session?.user?.email ?? ""}
           </p>
         </div>
+        <DropdownMenuItem
+          onClick={handleAddPasskey}
+          disabled={isPending}
+          className="cursor-pointer"
+        >
+          {isPending ? (
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+          ) : (
+            <Fingerprint className="w-4 h-4 mr-2" />
+          )}
+          Manage Passkey
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() =>
             signOut({

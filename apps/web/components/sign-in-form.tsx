@@ -28,8 +28,7 @@ export function SignInForm({ dictionary, lang }: SignInFormProps) {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
   const { nav } = dictionary;
 
-  function handleMagicLink(e: React.FormEvent) {
-    e.preventDefault();
+  function handleMagicLink() {
     if (!email) return;
 
     startTransition(async () => {
@@ -64,33 +63,6 @@ export function SignInForm({ dictionary, lang }: SignInFormProps) {
         <CardDescription>Choose your preferred sign-in method</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Passkey Button */}
-        <Button
-          variant="outline"
-          className="w-full h-12 text-base gap-2 cursor-pointer"
-          onClick={handlePasskey}
-          disabled={isPending}
-        >
-          {isPending ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Fingerprint className="w-5 h-5" />
-          )}
-          Sign in with Passkey
-        </Button>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <Separator />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
-              Or continue with email
-            </span>
-          </div>
-        </div>
-
-        {/* Magic Link Form */}
         {magicLinkSent ? (
           <div className="text-center py-6 space-y-3">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/20 mb-2">
@@ -111,7 +83,8 @@ export function SignInForm({ dictionary, lang }: SignInFormProps) {
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleMagicLink} className="space-y-3">
+          <>
+            {/* Shared Email Field */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -124,10 +97,36 @@ export function SignInForm({ dictionary, lang }: SignInFormProps) {
                 className="h-12"
               />
             </div>
+
+            {/* Passkey Button */}
             <Button
-              type="submit"
+              variant="outline"
+              className="w-full h-12 text-base gap-2 cursor-pointer"
+              onClick={handlePasskey}
+              disabled={isPending || !email}
+            >
+              {isPending ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <Fingerprint className="w-5 h-5" />
+              )}
+              Sign in with Passkey
+            </Button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">or</span>
+              </div>
+            </div>
+
+            {/* Magic Link Button */}
+            <Button
               className="w-full h-12 text-base gap-2 cursor-pointer"
               disabled={isPending || !email}
+              onClick={handleMagicLink}
             >
               {isPending ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -136,7 +135,7 @@ export function SignInForm({ dictionary, lang }: SignInFormProps) {
               )}
               Send Magic Link
             </Button>
-          </form>
+          </>
         )}
       </CardContent>
     </Card>
