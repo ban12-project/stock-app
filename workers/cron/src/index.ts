@@ -148,17 +148,20 @@ async function processStockAlerts(env: Env) {
             notifiedAt: now,
           });
 
+          const url = new URL("/dashboard", env.NEXT_PUBLIC_HOST_URL);
+          url.searchParams.set("id", alert.id);
+
           await notifyUserById(
             db,
             alert.userId,
             {
               title: `📈 ${alert.stockName}`,
               body: message,
-              url: "/dashboard",
+              url: url.href,
             },
             env.VAPID_PRIVATE_KEY,
             env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-          ); // Note: notifyUserById might need access to keys. We will pass them if needed. (Need to modify web-push to accept keys if it didn't)
+          );
 
           await db
             .update(schema.stockAlert)
